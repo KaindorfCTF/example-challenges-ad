@@ -1,0 +1,62 @@
+---
+- name: create dir
+  file:
+    path: "{{ challenge_path }}"
+    state: directory
+    owner: http
+    group: http
+
+- name: copy files
+  copy:
+    src: "{{ item }}"
+    dest: '{{ challenge_path }}'
+    owner: http
+    group: http
+  with_items:
+    - html
+    - dump.sql
+
+- name: add www-data to http group
+  user: name='www-data'
+        groups=http
+        append=yes
+  notify:
+    - nginx restart
+    - php-fpm restart
+
+- name: import mariadb database
+  mysql_db:
+    name: fedpassdb
+    state: import
+    target: '{{ challenge_path }}/dump.sql'
+
+- name: add database user
+  mysql_user:
+    name: fedadmin
+    password: supersecure1
+    priv: 'fedpassdb.*:SELECT,INSERT,UPDATE,DELETE'
+    state: present
+
+- name: copy config nginx site
+  template:
+    src: fedpassdb_nginx.conf
+    dest: /etc/nginx/sites-available
+  notify:
+    - nginx restart
+    - php-fpm restart
+
+- name: enable site
+  file:
+    src: /etc/nginx/sites-available/fedpassdb_nginx.conf
+    dest: /etc/nginx/sites-enabled/fedpassdb_nginx.conf
+    state: link
+  notify:
+    - nginx restart
+    - php-fpm restart
+
+# hack. investigate later
+- name: always restart php-fpm to fix multi deployment problem
+  become: true
+  service:
+    name: php-fpm
+    state: restarted

@@ -66,6 +66,7 @@ class ExampleChecker(checkerlib.BaseChecker):
 def connect(ip):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(5)
     sock.connect((ip, 9999))
     return sock
 

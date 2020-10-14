@@ -1,0 +1,8 @@
+name: example_slug
+display_name: "Example Challenge"
+author:
+    name: exo
+    email: exo@hack.more.systems
+description: |
+          Just a simple example challenge.
+checker_cmd: "checker.py"

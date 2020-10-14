@@ -5,4 +5,4 @@ author:
     email: exo@hack.more.systems
 description: |
           Just a simple example challenge.
-checker_cmd: "checker.py"
+checker_type: "python"

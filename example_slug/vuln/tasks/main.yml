@@ -1,9 +1,19 @@
 ---
+- name: setfact www_user for Archlinux
+  set_fact:
+    www_user: 'http'
+  when: ansible_os_family == "Archlinux"
+
+- name: setfact www_user for Debian
+  set_fact:
+    www_user: 'www-data'
+  when: ansible_os_family == "Debian"
+
 - name: create dir
   file:
     path: "{{ challenge_path }}"
     state: directory
-    owner: http
+    owner: "{{ www_user }}"
     group: http
 
 - name: copy files

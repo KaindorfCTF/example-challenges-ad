@@ -14,25 +14,26 @@
     path: "{{ challenge_path }}"
     state: directory
     owner: "{{ www_user }}"
-    group: http
+    group: "{{ www_user }}"
 
 - name: copy files
   copy:
     src: "{{ item }}"
     dest: '{{ challenge_path }}'
-    owner: http
-    group: http
+    owner: "{{ www_user }}"
+    group: "{{ www_user }}"
   with_items:
     - html
     - dump.sql
 
 - name: add www-data to http group
-  user: name='www-data'
+  user: name='{{ www-data }}'
         groups=http
         append=yes
   notify:
     - nginx restart
     - php-fpm restart
+  when: ansible_os_family == "Archlinux"
 
 - name: import mariadb database
   mysql_db:
@@ -64,9 +65,8 @@
     - nginx restart
     - php-fpm restart
 
-# hack. investigate later
-- name: always restart php-fpm to fix multi deployment problem
-  become: true
-  service:
-    name: php-fpm
-    state: restarted
+- debug: msg="always restart php-fpm to fix multi deployment problem"
+  notify: php-fpm restart
+  changed_when: true
+
+- meta: flush_handlers

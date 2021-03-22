@@ -1,6 +1,0 @@
----
-dependencies:
-- { role: common/mariadb }
-- { role: common/nginx }
-- { role: common/php }
-- { role: common/php_mariadb }

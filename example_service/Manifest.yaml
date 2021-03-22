@@ -1,0 +1,8 @@
+name: example_service
+display_name: "Example Service"
+author:
+    name: exo
+    email: exo@hack.more.systems
+description: |
+    Just a simple example challenge.
+checker_type: "python"

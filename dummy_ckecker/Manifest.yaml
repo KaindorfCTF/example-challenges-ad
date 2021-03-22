@@ -1,0 +1,8 @@
+name: dummy_checker
+display_name: "Dummy checker"
+author:
+    name: exo
+    email: exo@hack.more.systems
+description: |
+    Just a dummy checker with no vulnerable service.
+checker_type: "python"

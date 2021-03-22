@@ -1,0 +1,6 @@
+[Unit]
+Description=Example service starter
+
+[Service]
+WorkingDirectory={{ challenge_path }}/
+ExecStart=/usr/bin/python3 example_service.py

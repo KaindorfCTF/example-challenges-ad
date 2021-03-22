@@ -1,0 +1,24 @@
+---
+- name: create dir
+  file:
+    path: "{{ challenge_path }}"
+    state: directory
+
+- name: copy files
+  copy:
+    src: "example_service.py"
+    dest: '{{ challenge_path }}/example_service.py'
+
+- name: copy systemd unit file
+  become: true
+  template:
+    src: example_service.service
+    dest: "/etc/systemd/system/"
+
+- name: enable and start systemd service
+  become: true
+  systemd:
+    enabled: yes
+    state: started
+    daemon_reload: yes
+    name: example_service
